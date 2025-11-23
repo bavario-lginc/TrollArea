@@ -1,0 +1,7 @@
+{
+  "Version": 2,
+  "Files": [
+    "include/TrollArea.h",
+    "source/TrollArea.cpp"
+  ]
+}

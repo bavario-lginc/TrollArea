@@ -129,6 +129,31 @@ void TrollArea::movement () {
                     }
                     MarioAccess::getPlayerActor()->mScale.set(playerScale);
                     break;
+                case 18: // Delete random star [assistance by VTXG]
+                    GameDataAllGalaxyStorage *pAllGalaxyStorage = GameDataFunction::getSaveDataHandleSequence()->getCurrentUserFile()->mGameDataHolder->mAllGalaxyStorage;
+                    while (MR::getPowerStarNum() > 0) {
+                        s32 galaxyIndex = (mObjArg1 < 0 ? MR::getRandom(0, pAllGalaxyStorage->mNumGalaxies) : mObjArg1);
+                        GameDataSomeGalaxyStorage *pCurrentGalaxy = pAllGalaxyStorage->mGalaxyStorages[galaxyIndex];
+                        s32 powerStarNum = pCurrentGalaxy->getPowerStarNumOwned();
+                        if (powerStarNum > 0) {
+                            if (mObjArg2 > 0) {
+                                GameDataSomeScenarioAccessor *pCurrentScenario = pCurrentGalaxy->getScenarioAccessor(mObjArg2);
+                                pCurrentScenario->resetAllData();
+                            } else {
+                                for (s32 i = 1; i < pCurrentGalaxy->mScenarioNum + 1; i++) {
+                                    GameDataSomeScenarioAccessor *pCurrentScenario = pCurrentGalaxy->getScenarioAccessor(i);
+                                    if (pCurrentScenario->testFlag(1) || pCurrentScenario->testFlag(2)) {
+                                        pCurrentScenario->resetAllData();
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        if (mObjArg1 >= 0) 
+                            break;
+                    }
+                    break;
             }
             mHasRun = true;
         }
